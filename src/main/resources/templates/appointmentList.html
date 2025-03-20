@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список приемов</title>
+</head>
+<body>
+<h1>Список приемов</h1>
+<form action="/appointments/add" method="post" th:object="${appointment}">
+    <input type="date" name="date" th:field="*{date}" placeholder="Дата" required>
+    <input type="time" name="time" th:field="*{time}" placeholder="Время" required>
+    <div th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Дата обязательна</div>
+    <div th:if="${#fields.hasErrors('time')}" th:errors="*{time}">Время обязательно</div>
+    <div>
+        <label for="cat">Кошка: </label>
+        <select id="cat" th:field="*{cat}">
+            <option th:each="cat : ${cats}" th:value="${cat.id}" th:text="${cat.name}"></option>
+        </select>
+    </div>
+    <div>
+        <label for="vet">Ветеринар: </label>
+        <select id="vet" th:field="*{vet}">
+            <option th:each="vet : ${vets}" th:value="${vet.id}" th:text="${vet.name}"></option>
+        </select>
+    </div>
+    <div>
+        <label for="treatments">Услуги: </label>
+        <select id="treatments" th:field="*{treatments}" multiple>
+            <option th:each="treatment : ${treatments}" th:value="${treatment.id}" th:text="${treatment.description}"></option>
+        </select>
+    </div>
+    <button type="submit" formmethod="post">Добавить прием</button>
+</form>
+
+<h2>Все приемы:</h2>
+
+<ul>
+    <th:block th:each="appointment : ${appointments}">
+        <li>
+            <span th:text="${appointment.date} + ' ' + ${appointment.time}"></span>
+            <form action="/appointments/update" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${appointment.id}" required>
+                <input type="date" name="date" th:value="${appointment.date}" placeholder="Дата" required>
+                <input type="time" name="time" th:value="${appointment.time}" placeholder="Время" required>
+                <div>
+                    <label for="cat">Кошка: </label>
+                    <select id="cat" name="cat">
+                        <option th:each="cat : ${cats}" th:value="${cat.id}" th:text="${cat.name}" th:selected="${cat.id == appointment.cat.id}"></option>
+                    </select>
+                </div>
+                <div>
+                    <label for="vet">Ветеринар: </label>
+                    <select id="vet" name="vet">
+                        <option th:each="vet : ${vets}" th:value="${vet.id}" th:text="${vet.name}" th:selected="${vet.id == appointment.vet.id}"></option>
+                    </select>
+                </div>
+                <div>
+                    <label for="treatments">Участники: </label>
+                    <select id="treatments" name="treatments" multiple>
+                        <option th:each="treatment : ${treatments}" th:value="${treatment.id}" th:text="${treatment.description}" th:selected="${appointment.treatments.contains(treatment)}"></option>
+                    </select>
+                </div>
+                <button type="submit" formmethod="post">Обновить</button>
+            </form>
+            <form action="/appointments/delete" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${appointment.id}" required>
+                <button type="submit" formmethod="post">Удалить</button>
+            </form>
+        </li>
+    </th:block>
+</ul>
+</body>
+</html>

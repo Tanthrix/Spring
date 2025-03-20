@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Домашняя страница</title>
+</head>
+<body>
+<h1> Здравствуйте,<p th:text="${name}"/></h1>
+<p>Выберите операцию:</p>
+<button onclick="window.location.href='/calculator'">Калькулятор</button>
+<button onclick="window.location.href='/converter'">Конвертер валют</button>
+</body>
+</html>

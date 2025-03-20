@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Список владельцев</title>
+</head>
+<body>
+<h1>Список владельцев</h1>
+<form action="/owners/add" method="post" th:object="${owner}">
+  <input type="text" name="name" th:field="*{name}" placeholder="Имя владельца" required>
+  <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Имя не менее 2 символов</div>
+  <div>
+    <label for="clinic">Клиника: </label>
+    <select id="clinic" th:field="*{clinic}">
+      <option th:each="clinic : ${clinics}" th:value="${clinic.id}" th:text="${clinic.name}"></option>
+    </select>
+  </div>
+  <button type="submit" formmethod="post">Добавить владельца</button>
+</form>
+
+<h2>Все владельцы:</h2>
+
+<ul>
+  <th:block th:each="owner : ${owners}">
+    <li>
+      <span th:text="${owner.name}"></span>
+      <form action="/owners/update" method="post" style="display:inline;">
+        <input type="hidden" name="id" th:value="${owner.id}" required>
+        <input type="text" name="name" th:value="${owner.name}" placeholder="Имя владельца" required>
+        <div>
+          <label for="clinic">Клиника: </label>
+          <select id="clinic" name="clinic">
+            <option th:each="clinic : ${clinics}" th:value="${clinic.id}" th:text="${clinic.name}" th:selected="${clinic.id == owner.clinic.id}"></option>
+          </select>
+        </div>
+        <button type="submit" formmethod="post">Обновить</button>
+      </form>
+      <form action="/owners/delete" method="post" style="display:inline;">
+        <input type="hidden" name="id" th:value="${owner.id}" required>
+        <button type="submit" formmethod="post">Удалить</button>
+      </form>
+    </li>
+  </th:block>
+</ul>
+</body>
+</html>
